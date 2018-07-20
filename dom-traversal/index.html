@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Javascript Exercise</title>
+    <style>
+      .container {
+        display: flex;
+        margin-left: 100px;
+      }
+      .container > div {
+        flex: 1;
+      }
+      .red {
+        color: red;
+      }
+      .blue {
+        color: blue;
+      }
+    </style>
+  <head>
+  <body>
+
+    <div class="container">
+      <!-- First DOM tree -->
+      <div id="1">1
+        <div style="padding-left: 16px">
+          <div id="11">11
+            <div style="padding-left: 16px">
+              <div id="111" class="red">111</div>
+              <div id="112">112</div>
+              <div id="113">113</div>
+              <div id="114">114</div>
+            </div>
+          </div>
+          <div id="12">12
+            <div style="padding-left: 16px">
+              <div id="121" class="red">121</div>
+              <div id="122">122</div>
+              <div id="123">123</div>
+              <div id="124">124</div>
+            </div>
+          </div>
+          <div id="13">13
+            <div style="padding-left: 16px">
+              <div id="131" class="blue">131</div>
+              <div id="132">132</div>
+              <div id="133">133</div>
+              <div id="134">134</div>
+            </div>
+          </div>
+          <div id="14">14
+            <div style="padding-left: 16px">
+              <div id="141" class="blue">141</div>
+              <div id="142">142</div>
+              <div id="143">143</div>
+              <div id="144">144</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Second DOM tree -->
+      <div id="2">2
+        <div style="padding-left: 16px">
+          <div id="21">21
+            <div style="padding-left: 16px">
+              <div id="211">211</div>
+              <div id="212">212</div>
+              <div id="213">213</div>
+              <div id="214">214</div>
+            </div>
+          </div>
+          <div id="22">22
+            <div style="padding-left: 16px">
+              <div id="221">221</div>
+              <div id="222">222</div>
+              <div id="223">223</div>
+              <div id="224">224</div>
+            </div>
+          </div>
+          <div id="23">23
+            <div style="padding-left: 16px">
+              <div id="231">231</div>
+              <div id="232">232</div>
+              <div id="233">233</div>
+              <div id="234">234</div>
+            </div>
+          </div>
+          <div id="24">24
+            <div style="padding-left: 16px">
+              <div id="241">241</div>
+              <div id="242">242</div>
+              <div id="243">243</div>
+              <div id="244">244</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script type="text/javascript">
+     function node(id) {
+       return document.getElementById(id);
+     }
+
+    function contains(nodeA, nodeB) {
+      if (!(nodeA && nodeB)) {
+        return false;
+      }
+      if (nodeA == nodeB) {
+        return false;
+      }
+      let node = nodeB;
+      while (node && node != nodeA) {
+        node = node.parentNode;
+      }
+      return node == nodeA;
+    }
+
+    function getElementsByClassName(className, node) {
+      var result = [];
+      node = node || document;
+      if (node.classList && node.classList.contains(className)) {
+        result.push(node);
+      }
+      let children = node.children;
+      for (let i =0, len = children.length; i < len; i++) {
+        result.push(...getElementsByClassName(className, children[i]));
+      }
+      return result;
+    }
+
+    function findNodeInSimilarTree(root1, root2, node1) {
+      if (!(root1 && root2 && node1)) {
+        return null;
+      }
+      const pathArray = [];
+  
+      let node = node1;
+      while (node != root1) {
+        parent = node.parentNode;
+        if (parent == null) {
+          return null;
+        }
+        const children = parent.children;
+        for (let i = 0; i < children.length; i++) {
+          if (children[i] == node) {
+            pathArray.push(i);
+            break;
+          }
+        }
+        node = parent;
+      }
+      node = root2;
+      let index = pathArray.pop();
+      while (index != null) {
+        node = node.children[index];
+        index = pathArray.pop();
+      }
+      return node;
+    }
+
+    function curry(func) {
+      const argLen = func.length;
+      const initialArgs = Array.prototype.slice.call(arguments, 1);
+
+      return (function resolve() {
+        let cachedArgs = Array.prototype.slice.call(arguments);
+    
+        return function() {
+          let totalArgs = Array.prototype.concat.apply(cachedArgs, arguments);
+          if (totalArgs.length >= argLen) {
+            return func.apply(null, totalArgs);
+          }
+
+          return resolve.apply(null, totalArgs);
+        };
+      }).apply(null, initialArgs);
+    }
+  </script>
+<html>
